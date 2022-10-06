@@ -1,18 +1,40 @@
 import React from 'react'
-import { Grid, Image } from 'semantic-ui-react'
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
-export const CollectionView = () => (
-    <Grid columns={3} divided>
-      <Grid.Row>
-        <Grid.Column width={3}>
-          <Image src='/images/wireframe/media-paragraph.png' />
-        </Grid.Column>
-        <Grid.Column width={3}>
-          <Image src='/images/wireframe/media-paragraph.png' />
-        </Grid.Column>
-        <Grid.Column width={3}>
-          <Image src='/images/wireframe/media-paragraph.png' />
-        </Grid.Column>
-      </Grid.Row>
-    </Grid>
-  )
+export const CollectionView = (props => {
+
+    return (
+      <>
+        {Array.isArray(props.data) ?
+          props.data.forEach((document) => document) : 
+
+          
+          <Card sx={{ minWidth: 275 }}>
+          <CardContent>
+            <Typography variant="h5" component="div">
+              {props.id}
+            </Typography>
+              {Object.keys(Object.values(props.data)[0]).map((fields) => 
+            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+              {fields}
+            </Typography>)}
+            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+              adjective
+            </Typography>
+            <Typography variant="body2">
+              well meaning and kindly.
+              <br />
+              {'"a benevolent smile"'}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button size="small">Learn More</Button>
+          </CardActions>
+        </Card>}
+      </>
+    )
+  })

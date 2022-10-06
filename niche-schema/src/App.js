@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { getAllSpecs } from './firebase.jsx'
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -8,24 +8,33 @@ import TreeView from '@mui/lab/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
-// import { CollectionView } from './components/CollectionView';
+import { CollectionView } from './components/CollectionView';
 // import { LookupForm } from './components/LookupForm'
-import styled from '@emotion/styled'
+
+// import styled from '@emotion/styled'
 
 function App() {
   const [collectionData, setCollectionData] = useState('');
 
-  const onClick = async () => {
+  
+  const loadData = async () => {
     let temp = {}
     const specs = await getAllSpecs(`User`)
     specs.forEach((doc) => {
       if (!temp.hasOwnProperty(doc.id)) {
-      temp[doc.id] = doc.data();
+        temp[doc.id] = doc.data();
       }
     });
     
     await setCollectionData(temp)
-    await console.log(collectionData)
+  }
+  
+  useEffect(() => { 
+    loadData()
+  }, []);
+
+  const onClick = () => {
+    console.log(Object.values(Object.values(collectionData)[0]))
   }
 
   return (
@@ -41,14 +50,15 @@ function App() {
               defaultExpandIcon={<ChevronRightIcon />}
               sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
             >
-              <TreeItem onClick={onClick} nodeId="1" label="Applications">
-                <TreeItem nodeId="2" label="Calendar" />
+              <TreeItem onClick={onClick} nodeId="1" label="User">
+                <TreeItem nodeId="2" label={Object.keys(collectionData)[0]} />
               </TreeItem>
             </TreeView>
 
           </Grid>
+
           <Grid item xs={8}>
-            Philip
+            <CollectionView data={collectionData} id={Object.keys(collectionData)[0]}></CollectionView>
           </Grid>
         </Grid>
       </Container>
