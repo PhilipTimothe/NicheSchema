@@ -14,11 +14,42 @@ import { CollectionView } from './components/CollectionView';
 // import styled from '@emotion/styled'
 
 function App() {
+  const [schema, setSchema] = useState('');
   const [collectionData, setCollectionData] = useState('');
 
   
+  const convertSchema = async (schema) => {
+    let columns = []
+    let data = Object.entries(schema)
+    let fields = data.map((fields) => fields[1])
+    for (let x = 0; x < fields.length; x++) {
+        let temp = []
+        let entry = Object.entries(fields[x])
+        for (let y = 0; y < entry.length; y++) {
+            let values = Object.entries(entry[y][1])
+            let result = {
+                field: entry[y][0],
+                headerName: entry[y][0],
+                width: 100
+                        }
+            for (let i = 0; i < values.length; i++) {
+                result[values[i][0]] = values[i][1] 
+            }
+            temp.push(result)
+            result = {}
+        }
+        columns.push(temp)
+    }
+    setSchema(columns)
+  }
+  
   const loadData = async () => {
     let temp = {}
+
+    await fetch('https://beagleschema.demcrepl.repl.co/specs/user/schema')
+    .then((response) => response.json())
+    .then((data) => convertSchema(data));
+
     const specs = await getAllSpecs(`User`)
     specs.forEach((doc) => {
       if (!temp.hasOwnProperty(doc.id)) {
@@ -31,10 +62,15 @@ function App() {
   
   useEffect(() => { 
     loadData()
+    
   }, []);
 
   const onClick = () => {
-    console.log(Object.values(Object.values(collectionData)[0]))
+    console.log(schema)
+    // console.log(Object.entries(Object.values(collectionData)))
+    // console.log(
+      // Object.entries(collectionData[Object.keys(collectionData)[0]]).map((data) => Object.entries(data[1]))
+    // )
   }
 
   return (
@@ -58,7 +94,10 @@ function App() {
           </Grid>
 
           <Grid item xs={8}>
-            <CollectionView data={collectionData} id={Object.keys(collectionData)[0]}></CollectionView>
+            {collectionData ? 
+            <CollectionView data={collectionData} id={Object.keys(collectionData)[0]}></CollectionView> :
+            ''
+          }
           </Grid>
         </Grid>
       </Container>
