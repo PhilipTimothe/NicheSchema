@@ -18,11 +18,18 @@ import Paper from '@mui/material/Paper';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 
+import { DocumentEditForm } from './DocumentEditForm';
+
+
 
 
 export const CollectionView = (props => {
   const { data, columnsSchema } = props;
   let errors = 0
+
+  const handleModal = (event) => {
+
+  }
 
     return (
       <>
@@ -30,7 +37,7 @@ export const CollectionView = (props => {
           props.data.forEach((document) => document) : 
 
           
-          <Card id={uniqid} sx={{ minWidth: 275 }}>
+          <Card id={0} sx={{ minWidth: 275 }}>
             <CardContent>
               <Typography variant="h5" component="div">
                 {'Document ID:'}  {props.id}
@@ -53,7 +60,7 @@ export const CollectionView = (props => {
                       <TableBody>
                         <TableRow>
                           {/* Can grab previous iteration value instead of reimplementing full map */}
-                          {Object.keys(data[props.id][fields[0]]).map((key) => {
+                          {Object.keys(data[props.id][fields[0]]).map((key, index) => {
                             let schema = columnsSchema[fields[0]]
                             let details = data[props.id][fields[0]][key]
                             
@@ -95,7 +102,7 @@ export const CollectionView = (props => {
             </CardContent>
 
           <CardActions>
-            <Button id={uniqid} size="small">View</Button>
+            <DocumentEditForm></DocumentEditForm>
             <Stack sx={{ width: '100%' }} spacing={2}>
               <Alert variant="outlined" severity="error">
                 {errors} Document Errors
