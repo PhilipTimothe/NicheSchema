@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { getAllSpecs } from './firebase.jsx'
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -16,52 +16,13 @@ import { CollectionView } from './components/CollectionView';
 function App() {
   const [schema, setSchema] = useState('');
   const [collectionData, setCollectionData] = useState('');
-
-  
-  const convertSchema = async (schema) => {
-    let columns = []
-    let data = Object.entries(schema)
-    let fields = data.map((fields) => fields[1])
-    for (let x = 0; x < fields.length; x++) {
-        let temp = []
-        let entry = Object.entries(fields[x])
-        for (let y = 0; y < entry.length; y++) {
-            let values = Object.entries(entry[y][1])
-            let result = {
-                field: entry[y][0],
-                headerName: entry[y][0],
-                width: 100
-                        }
-            for (let i = 0; i < values.length; i++) {
-              // alternatively creating an array with acceptable string is better for the next condition.
-              if (values[i][0] === 'initialValue' || values[i][0] === 'required') continue
-              if (typeof values[i][1] === 'string') {
-                  if (values[i][1].includes('|')) {
-                      result[values[i][0]] = 'singleSelect'
-                      result['valueOptions'] = values[i][1].split(' | ')
-                  } else {
-                      if (values[i][1] === 'Timestamp' ) {
-                          result[values[i][0]] = 'dateTime'
-                      } else {
-                          result[values[i][0]] = values[i][1]
-                      }
-                  }
-              }
-            }
-            temp.push(result)
-            result = {}
-        }
-        columns.push(temp)
-    }
-    setSchema(columns)
-  }
   
   const loadData = async () => {
     let temp = {}
 
     await fetch('https://beagleschema.demcrepl.repl.co/specs/user/schema')
     .then((response) => response.json())
-    .then((data) => convertSchema(data));
+    .then((data) => setSchema(data));
 
     const specs = await getAllSpecs(`User`)
     specs.forEach((doc) => {
@@ -79,7 +40,8 @@ function App() {
   }, []);
 
   const onClick = () => {
-    // console.log(Object.entries(Object.values(collectionData)))
+    console.log(schema)
+    console.log(collectionData)
     // console.log(
       // Object.entries(collectionData[Object.keys(collectionData)[0]]).map((data) => Object.entries(data[1]))
     // )
