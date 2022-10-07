@@ -1,5 +1,14 @@
-import { initializeApp } from 'firebase/app';
-import { doc, getDocs, getDoc, updateDoc, getFirestore, setDoc, deleteDoc, collection } from 'firebase/firestore';
+import { initializeApp } from "firebase/app";
+import {
+  doc,
+  getDocs,
+  getDoc,
+  updateDoc,
+  getFirestore,
+  setDoc,
+  deleteDoc,
+  collection,
+} from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -12,7 +21,7 @@ const firebaseConfig = {
   storageBucket: "niche-schema.appspot.com",
   messagingSenderId: "698874403286",
   appId: "1:698874403286:web:1e82392821dc1953bbac77",
-  measurementId: "G-E3ST329TCF"
+  measurementId: "G-E3ST329TCF",
 };
 
 // Initialize Firebase
@@ -26,17 +35,17 @@ export const getAllSpecs = async (path) => {
   // querySnapshot.forEach((doc) => {
   //   console.log(JSON.stringify(doc.data()));
   // });
-  return querySnapshot
+  return querySnapshot;
   // const docRef = collection(db, path);
   // const res = await getDocs(docRef);
   // return console.log(res.docs());
-}
+};
 
 export const getSpec = async (path) => {
   const docRef = doc(db, path);
   const res = await getDoc(docRef);
   return res.data();
-}
+};
 
 export const createSpec = async (path, values) => {
   const docRef = doc(db, path);
