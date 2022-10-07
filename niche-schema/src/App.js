@@ -33,7 +33,20 @@ function App() {
                 width: 100
                         }
             for (let i = 0; i < values.length; i++) {
-                result[values[i][0]] = values[i][1] 
+              // alternatively creating an array with acceptable string is better for the next condition.
+              if (values[i][0] === 'initialValue' || values[i][0] === 'required') continue
+              if (typeof values[i][1] === 'string') {
+                  if (values[i][1].includes('|')) {
+                      result[values[i][0]] = 'singleSelect'
+                      result['valueOptions'] = values[i][1].split(' | ')
+                  } else {
+                      if (values[i][1] === 'Timestamp' ) {
+                          result[values[i][0]] = 'dateTime'
+                      } else {
+                          result[values[i][0]] = values[i][1]
+                      }
+                  }
+              }
             }
             temp.push(result)
             result = {}
@@ -66,7 +79,6 @@ function App() {
   }, []);
 
   const onClick = () => {
-    console.log(schema)
     // console.log(Object.entries(Object.values(collectionData)))
     // console.log(
       // Object.entries(collectionData[Object.keys(collectionData)[0]]).map((data) => Object.entries(data[1]))
@@ -95,7 +107,7 @@ function App() {
 
           <Grid item xs={8}>
             {collectionData ? 
-            <CollectionView data={collectionData} id={Object.keys(collectionData)[0]}></CollectionView> :
+            <CollectionView data={collectionData} columnsSchema={schema} id={Object.keys(collectionData)[0]}></CollectionView> :
             ''
           }
           </Grid>
