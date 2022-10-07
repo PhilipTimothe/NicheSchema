@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import uniqid from 'uniqid';
 
 import Card from '@mui/material/Card';
@@ -22,7 +22,7 @@ import Stack from '@mui/material/Stack';
 
 export const CollectionView = (props => {
   const { data, columnsSchema } = props;
-  const [errors, setErrors] = useState(0)
+  let errors = 0
 
     return (
       <>
@@ -35,13 +35,13 @@ export const CollectionView = (props => {
               <Typography variant="h5" component="div">
                 {'Document ID:'}  {props.id}
               </Typography>
-
                 {Object.entries(data[props.id]).map((fields) => 
                 <>
                   <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                     {fields[0]}
                   </Typography>
 
+                  {/* Table implementation */}
                   <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                       <TableHead>
@@ -52,27 +52,26 @@ export const CollectionView = (props => {
                       </TableHead>
                       <TableBody>
                         <TableRow>
+                          {/* Can grab previous iteration value instead of reimplementing full map */}
                           {Object.keys(data[props.id][fields[0]]).map((key) => {
                             let schema = columnsSchema[fields[0]]
                             let details = data[props.id][fields[0]][key]
-                            let error = 0
                             
                             if (schema[key].hasOwnProperty('required') && schema[key]['required'] === true) {
                               if (details === null) {
                                 console.log('error')
-                                error++
+                                errors++
                               }
                               if (schema[key]['type'].includes('|')) {
                                 let currentType = schema[key]['type'].split(' | ')
                                 if (!currentType.includes(details)) {
-                                  console.log('error')
-                                  error++
+                                  errors++
                                 }
                               } else if (schema[key]['type'] !== typeof details) {
-                                console.log('error')
-                                error++
+                                errors++
                               }
-                              // need a timestamp conditional/ converter possibly
+                              // Need a timestamp conditional/ converter possibly
+                              // Need for parsing of Phone number to be a full interger
                             }
 
                             if (typeof details === 'object' && details.hasOwnProperty('seconds')) {
@@ -99,11 +98,12 @@ export const CollectionView = (props => {
             <Button id={uniqid} size="small">View</Button>
             <Stack sx={{ width: '100%' }} spacing={2}>
               <Alert variant="outlined" severity="error">
-                Document Errors
+                {errors} Document Errors
               </Alert>
             </Stack>
           </CardActions>
-        </Card>}
+        </Card>
+        }
       </>
     )
   })

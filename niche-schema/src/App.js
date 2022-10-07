@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { getAllSpecs } from './firebase.jsx'
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -9,13 +9,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 import { CollectionView } from './components/CollectionView';
-// import { LookupForm } from './components/LookupForm'
-
-// import styled from '@emotion/styled'
 
 function App() {
   const [schema, setSchema] = useState('');
   const [collectionData, setCollectionData] = useState('');
+  const [showDocuments, setShowDocuments] = useState(false)
   
   const loadData = async () => {
     let temp = {}
@@ -39,12 +37,8 @@ function App() {
     
   }, []);
 
-  const onClick = () => {
-    console.log(schema)
-    console.log(collectionData)
-    // console.log(
-      // Object.entries(collectionData[Object.keys(collectionData)[0]]).map((data) => Object.entries(data[1]))
-    // )
+  const handleShowDocuments = () => {
+    setShowDocuments(current => !current);
   }
 
   return (
@@ -60,7 +54,7 @@ function App() {
               defaultExpandIcon={<ChevronRightIcon />}
               sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
             >
-              <TreeItem onClick={onClick} nodeId="1" label="User">
+              <TreeItem onClick={handleShowDocuments} nodeId="1" label="User">
                 <TreeItem nodeId="2" label={Object.keys(collectionData)[0]} />
               </TreeItem>
             </TreeView>
@@ -68,10 +62,12 @@ function App() {
           </Grid>
 
           <Grid item xs={8}>
-            {collectionData ? 
+          {showDocuments && (
+            collectionData ? 
             <CollectionView data={collectionData} columnsSchema={schema} id={Object.keys(collectionData)[0]}></CollectionView> :
             ''
-          }
+          
+          )}
           </Grid>
         </Grid>
       </Container>
