@@ -38,6 +38,8 @@ function App() {
 
   const handleShowDocuments = () => {
     setShowDocuments((current) => !current);
+    // let info = collectionData['Xq9c2VVBQPJb4a7oVzXL']['fields']['created_at']
+    // console.log(info.toDate())
   };
 
   return (

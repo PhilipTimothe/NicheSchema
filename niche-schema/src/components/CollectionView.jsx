@@ -95,8 +95,9 @@ export const CollectionView = (props) => {
                             ) {
                               // need to debug date input ****
                               let dateValues = Object.values(details);
+                              console.log(typeof details.toDate().toDateString())
                               // return <TableCell align="right">{new Date((dateValues[0], dateValues[1]))}</TableCell>
-                              return <TableCell align="right">here</TableCell>;
+                              return <TableCell align="right">{details.toDate().toDateString()}</TableCell>;
                             } else {
                               return (
                                 <TableCell align="right">{details}</TableCell>
